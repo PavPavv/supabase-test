@@ -1,19 +1,44 @@
 import React, { useState } from 'react';
 
+import supabase from '../../config/supabaseClient';
+
 import styles from './styles.module.css';
 
 const Test = (): JSX.Element => {
   const [name, setName] = useState('');
-  const [sex, setSex] = useState('Select a sex');
+  const [sex, setSex] = useState('');
   const [color, setColor] = useState('');
   const [formError, setFormError] = useState('');
 
   const handleSubmit = async (e: React.SyntheticEvent): Promise<any> => {
     e.preventDefault();
 
-    if (!name || !sex || color) {
+    if (!name || !sex || !color) {
       setFormError('All fields are required!');
+      return;
     }
+
+    const { data, error } = await supabase.from('sharks').insert([
+      // Each object represent one row in the table
+      {
+        name,
+        sex,
+        color,
+      },
+    ]);
+
+    if (error) {
+      console.log('supa error', error);
+      setFormError('Creating shark error');
+    }
+    if (data) {
+      console.log('should clear');
+    }
+    console.log('should clear 2');
+    setFormError('');
+    setName('');
+    setColor('');
+    setSex('');
   };
 
   return (
