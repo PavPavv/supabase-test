@@ -32,5 +32,24 @@ export default supabase;
 ## 5. Use it inside your components
 
 ```typescript
+useEffect(() => {
+  const fetchSharks = async () => {
+    const { data, error } = await supabase
+      // table name
+      .from('sharks')
+      // select anf get all the table records
+      .select();
 
+    if (error) {
+      console.log('supa error', error);
+      setFetchError('Sharks fetch error');
+    }
+    if (data) {
+      console.log('data', data);
+      setSharks(data);
+      setFetchError('');
+    }
+  };
+  fetchSharks();
+}, []);
 ```
